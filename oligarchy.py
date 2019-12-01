@@ -14,8 +14,14 @@
 
 
 
+import argparse
 import sys
 import random
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--history", action='store_true', help="Show win-loss history per player.")
+parser.add_argument("--verbose", action='store_true', help="Show results after every round.")
+args = parser.parse_args()
 
 num_players = int(input('Number of players: '))
 num_rounds = int(input('Number of rounds: '))
@@ -27,12 +33,13 @@ histories = [''] * num_players
 battles = list(range(num_players))
 
 for round in range(1, num_rounds + 1):
-    print()
-    print(f'Round {round}')
-    print('----------------------------------')
-    for (player, amount) in enumerate(amounts):
-        print(f'Player {(player + 1):2}: {amount:8.3f} ({(amount / total_money * 100):5.2f} %)')
-    print()
+    if args.verbose:
+        print()
+        print(f'Round {round}')
+        print('----------------------------------')
+        for (player, amount) in enumerate(amounts):
+            print(f'Player {(player + 1):2}: {amount:8.3f} ({(amount / total_money * 100):5.2f} %)')
+        print()
     random.shuffle(battles)
     for i in range(0, num_players, 2):
         if i + 1 >= num_players:
@@ -52,16 +59,21 @@ for round in range(1, num_rounds + 1):
         histories[winner] += 'W'
         histories[loser] += 'L'
 
-        print(f'Player {winner + 1} takes {wager:0.5f} from player {loser + 1}')
+        if args.verbose:
+            print(f'Player {winner + 1} takes {wager:0.5f} from player {loser + 1}')
 
 
 print()
 print(f'Final Results')
 print('----------------------------------')
 for (player, amount) in enumerate(amounts):
-    print(f'Player {(player + 1):2}: {amount:8.3f} ({(amount / total_money * 100):5.2f} %)')
+    h = ''
+    if args.history:
+        h = str(histories[player])
+    print(f'Player {(player + 1):2}: {amount:8.3f} ({(amount / total_money * 100):5.2f} %) {h}')
 print()
 
+i = 0
 for (player, amount) in sorted(list(enumerate(amounts)), key=lambda x: -x[1]):
     percentage = amount / total_money
     if percentage >= 0.99:
@@ -73,6 +85,10 @@ for (player, amount) in sorted(list(enumerate(amounts)), key=lambda x: -x[1]):
     elif percentage >= 0.5:
         print(f'Player {(player + 1):2} is a talented wealth creator!')
     elif percentage >= 0.1:
-        print(f'Player {(player + 1):2} is hardscrabble salt of the Earth, that welcomes their torment, because they know what it true in life!')
-    elif percentage < 0.01:
+        print(f'Player {(player + 1):2} is hard worker who nothing has ever been given to.')
+    elif percentage >= 0.001:
+        print(f'Player {(player + 1):2} could have achieved success if they just wanted it. They must not have wanted it.')
+    elif percentage < 0.001:
         print(f'Player {(player + 1):2} is lazy and has only themselves to blame for their position in life. A waste of flesh, that deserves their place.')
+    else:
+        print(f'Player {(player + 1):2} is an enigma.')
