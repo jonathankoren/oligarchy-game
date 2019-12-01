@@ -82,7 +82,7 @@ for (player, amount) in sorted(list(enumerate(amounts)), key=lambda x: -x[1]):
     elif percentage >= 0.9:
         print(f'Player {(player + 1):2} is truely a demigod who has earned their place in Heaven through skill and hard work!')
     elif percentage >= 0.7:
-        print(f'Player {(player + 1):2} is superior to all others and has bent the universe to their will through shear gumption and talent!')
+        print(f'Player {(player + 1):2} is superior to all others and has bent the universe to their will through sheer gumption and talent!')
     elif percentage >= 0.5:
         print(f'Player {(player + 1):2} is a talented wealth creator!')
     elif percentage >= 0.1:
