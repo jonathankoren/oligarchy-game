@@ -73,7 +73,6 @@ for (player, amount) in enumerate(amounts):
     print(f'Player {(player + 1):2}: {amount:8.3f} ({(amount / total_money * 100):5.2f} %) {h}')
 print()
 
-i = 0
 for (player, amount) in sorted(list(enumerate(amounts)), key=lambda x: -x[1]):
     percentage = amount / total_money
     if percentage >= 0.99:
