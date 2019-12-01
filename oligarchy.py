@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Public Domain 
+
 # Taken from http://brewster.kahle.org/2019/11/30/the-game-of-oligarchy/ this
 # simulates the basic game and then passes judgement on the winner and losers.
 #
