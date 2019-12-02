@@ -1,0 +1,13 @@
+Taken from http://brewster.kahle.org/2019/11/30/the-game-of-oligarchy/ this
+simulates the basic game and then passes judgement on the winner and losers.
+
+The game is played as follows. Initally everyone starts out with an equal amount
+of money. During each round, players are paired off and flip a coin. The
+winner takes half of the minimum amount of the two players from the loser.
+
+Even though the pairs are random, and the coin flips are fair, the money
+concentrates, just like in real life. When you play this with real people,
+the "winners" start to act like they're "skilled" and "entitled" to their
+winnings, just like billionares do today.
+
+
