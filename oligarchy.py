@@ -22,7 +22,10 @@ import random
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--history", action='store_true', help="Show win-loss history per player.")
+parser.add_argument("--nosnark", dest='snark', action='store_false', help="Don't display snark")
+parser.add_argument("--redistrib", default=0, type=float, help="Redistribute  percentage [0, 100]")
 parser.add_argument("--verbose", action='store_true', help="Show results after every round.")
+
 args = parser.parse_args()
 
 num_players = int(input('Number of players: '))
@@ -42,6 +45,8 @@ for round in range(1, num_rounds + 1):
         for (player, amount) in enumerate(amounts):
             print(f'Player {(player + 1):2}: {amount:8.3f} ({(amount / total_money * 100):5.2f} %)')
         print()
+
+    # battle
     random.shuffle(battles)
     for i in range(0, num_players, 2):
         if i + 1 >= num_players:
@@ -64,6 +69,24 @@ for round in range(1, num_rounds + 1):
         if args.verbose:
             print(f'Player {winner + 1} takes {wager:0.5f} from player {loser + 1}')
 
+    # redistribute
+    if (args.redistrib > 0) and args.verbose:
+        print()
+    pool = 0.0
+    taxes = [0] * num_players
+    for i in range(0, num_players):
+        tax = (args.redistrib / 100.0) * amounts[i]
+        amounts[i] -= tax
+        pool += tax
+        taxes[i] = tax  
+    
+    if (pool > 0) and args.verbose:
+        print(f"Redistributing {pool:0.3f} evenly ({(pool / float(num_players)):0.3f} each).")
+    pool /= float(num_players)
+    for i in range(0, num_players):
+        amounts[i] += pool
+        if args.verbose and pool > 0:
+            print(f'Player {i} receives {(pool - taxes[i]):0.3f} (tax: {taxes[i]:0.3f}) Now {amounts[i]:0.3f}')
 
 print()
 print(f'Final Results')
@@ -75,21 +98,23 @@ for (player, amount) in enumerate(amounts):
     print(f'Player {(player + 1):2}: {amount:8.3f} ({(amount / total_money * 100):5.2f} %) {h}')
 print()
 
-for (player, amount) in sorted(list(enumerate(amounts)), key=lambda x: -x[1]):
-    percentage = amount / total_money
-    if percentage >= 0.99:
-        print(f'Player {(player + 1):2} IS THE GOD-EMPEROR! YOU SHOULD SACRAFICE YOURSELF FOR MERE CHANCE THAT THEY WOULD THINK ABOUT GLANCING YOUR WAY!')
-    elif percentage >= 0.9:
-        print(f'Player {(player + 1):2} is truely a demigod who has earned their place in Heaven through skill and hard work!')
-    elif percentage >= 0.7:
-        print(f'Player {(player + 1):2} is superior to all others and has bent the universe to their will through sheer gumption and talent!')
-    elif percentage >= 0.5:
-        print(f'Player {(player + 1):2} is a talented wealth creator!')
-    elif percentage >= 0.1:
-        print(f'Player {(player + 1):2} is hard worker who nothing has ever been given to.')
-    elif percentage >= 0.001:
-        print(f'Player {(player + 1):2} could have achieved success if they just wanted it. They must not have wanted it.')
-    elif percentage < 0.001:
-        print(f'Player {(player + 1):2} is lazy and has only themselves to blame for their position in life. A waste of flesh, that deserves their place.')
-    else:
-        print(f'Player {(player + 1):2} is an enigma.')
+
+if args.snark:
+    for (player, amount) in sorted(list(enumerate(amounts)), key=lambda x: -x[1]):
+        percentage = amount / total_money
+        if percentage >= 0.99:
+            print(f'Player {(player + 1):2} IS THE GOD-EMPEROR! YOU SHOULD SACRAFICE YOURSELF FOR MERE CHANCE THAT THEY WOULD THINK ABOUT GLANCING YOUR WAY!')
+        elif percentage >= 0.9:
+            print(f'Player {(player + 1):2} is truely a demigod who has earned their place in Heaven through skill and hard work!')
+        elif percentage >= 0.7:
+            print(f'Player {(player + 1):2} is superior to all others and has bent the universe to their will through sheer gumption and talent!')
+        elif percentage >= 0.5:
+            print(f'Player {(player + 1):2} is a talented wealth creator!')
+        elif percentage >= 0.1:
+            print(f'Player {(player + 1):2} is hard worker who nothing has ever been given to.')
+        elif percentage >= 0.001:
+            print(f'Player {(player + 1):2} could have achieved success if they just wanted it. They must not have wanted it.')
+        elif percentage < 0.001:
+            print(f'Player {(player + 1):2} is lazy and has only themselves to blame for their position in life. A waste of flesh, that deserves their place.')
+        else:
+            print(f'Player {(player + 1):2} is an enigma.')
